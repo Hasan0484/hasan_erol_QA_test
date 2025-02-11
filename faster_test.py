@@ -18,13 +18,10 @@ class TestAutoQA(unittest.TestCase):
         self.wait = WebDriverWait(self.driver, 10)
         logging.info("ChromeDriver is ready!")
 
-    def test_home_page(self):
+    def test_qa_page_career(self):
         self.navigation.open_url("https://useinsider.com/")
         self.assertIn("#1 Leader in Individualized, Cross-Channel CX — Insider", self.driver.title, "Home page title does not match")
         logging.info(self.driver.title)
-
-    def test_careers_page(self):
-        self.navigation.open_url("https://useinsider.com/")
       
         # this area is to get the screen into careers page
         company_btn = PageElements.find_element(self.driver, "(//a[normalize-space()='Company'])[1]")
@@ -52,24 +49,24 @@ class TestAutoQA(unittest.TestCase):
             logging.info("...Clicking on 'See all teams' button...")                     
             self.actions.move_to_element(teams_btn).move_by_offset(0, -300).perform() #tried different ways to scroll to the element, only this one works for this specific case
             self.actions.move_to_element(teams_btn).click().perform()
-            self.driver.execute_script("window.scrollBy(0,1750);") #scroll down to see the teams after selecting the location. I Had to use javaScript because the page was not scrolling down with the standart scroll method     
-            self.actions.pause(5).perform()
+            self.driver.execute_script("window.scrollBy(0,1750);") #scroll down to see the teams after selecting the location. I had to use javaScript because the page was not scrolling down with the standart scroll method     
+            self.actions.pause(2).perform()
           
-            logging.info("Teams block is now Open!")  # so everyone can see what is happening
+            logging.info("Teams block is now Open!")
         else:
             logging.info("Teams block was already opened.")
 
-    def test_careers_QA_engineer(self):
-        self.navigation.open_url("https://useinsider.com/careers/quality-assurance/")
+        configuration_btn = PageElements.find_element(self.driver, "(//div[@class='job-image text-center'])[12]")
+        configuration_btn.click()
       
         self.assertIn("quality assurance job", self.driver.title,"QA Engineer page title does not match")        
 
         see_jobs_btn = PageElements.find_element(self.driver, "//a[normalize-space()='See all QA jobs']")
         see_jobs_btn.click()               
       
-        self.driver.execute_script("window.scrollBy(0,500);") #scroll down to see the job titles before selecting the location
+        self.driver.execute_script("window.scrollBy(0,500);") #scroll down to see the job titles before selecting the location. Any other method did not work for this specific case      
         self.actions.pause(3).perform()
-        
+      
         filter_by_location = PageElements.find_element(self.driver, "//option[@class='job-location istanbul-turkiye']")
         filter_by_location.click()        
         
@@ -103,12 +100,9 @@ class TestAutoQA(unittest.TestCase):
         self.navigation.close()
 
 if __name__ == "__main__":
-    # Creating a test suite
-    # You can control in which order the tests will run.
+    # Creating a test suite    
     suite = unittest.TestSuite()
-    suite.addTest(TestAutoQA('test_home_page'))
-    suite.addTest(TestAutoQA('test_careers_page'))
-    suite.addTest(TestAutoQA('test_careers_QA_engineer'))
+    suite.addTest(TestAutoQA('test_qa_page_career'))
 
     # Running the test suite
     runner = unittest.TextTestRunner()
